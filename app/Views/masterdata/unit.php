@@ -8,18 +8,14 @@
     <script src="<?= base_url()?>/assets/js/simple-datatables.min.js"></script>
     <script type="text/javascript">
         var dataTable1;
-        var dataTable2;
-
-       
 
         $(function() {
-            // dataTables = new simpleDatatables.DataTable("#datatablesSimple");
-            get_list_deparment();
+            get_list_unit();
             reset_form();
 
             $('#reload').click(function(){
                 reset_form();
-                get_list_deparment();
+                get_list_unit();
             });
 
             $('#add').click(function() {
@@ -33,15 +29,15 @@
             $('.add_dep').val('');
         }
 
-        function get_list_deparment() {
+        function get_list_unit() {
             if (dataTable1) {
                 dataTable1.destroy();
             }
 
-            $('.table-department tbody').empty();
+            $('.table-unit tbody').empty();
             
             $.ajax({
-                url: '<?= base_url('api/masterdata/listDepartment') ?>',
+                url: '<?= base_url('api/masterdata/listUnit') ?>',
                 type: 'GET',
                 dataType: 'json',
                 beforeSend: function() {
@@ -66,17 +62,17 @@
                                     '<td>'+v.description+'</td>'+
                                     '<td><span class="badge '+badgeStatus+'">'+status+'</span></td>'+
                                     '<td>'+
-                                        '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark me-2" onclick="edit_department('+v.id+')"><i data-feather="edit"></i></button>'+    
-                                        '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark" onclick="delete_department('+v.id+')"><i data-feather="trash-2"></i></button>'+
+                                        '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark me-2" onclick="edit_unit('+v.id+')"><i data-feather="edit"></i></button>'+    
+                                        '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark" onclick="delete_unit('+v.id+')"><i data-feather="trash-2"></i></button>'+
                                     '</td>'+
                                 '</tr>';
-                            $('.table-department tbody').append(str);
+                            $('.table-unit tbody').append(str);
                         });
                     } else {
                         console.log('KOSONG')
 
                         str = '<tr><td class="datatable-empty" colspan="5">No entries found</td></tr>';
-                        $('.table-department tbody').append(str);
+                        $('.table-unit tbody').append(str);
                     }
 
                     feather.replace();
@@ -96,12 +92,12 @@
             });
         }
         
-        function save_department() {
+        function save_unit() {
             let addForm = $('#add_form').serialize();
 
             $.ajax({
                 type : 'POST',
-                url: '<?= base_url("api/masterdata/department") ?>',
+                url: '<?= base_url("api/masterdata/unit") ?>',
                 data: addForm,
                 cache: false,
                 dataType : 'json',
@@ -110,7 +106,7 @@
                 },
                 success: function(data) {
                     $('#add_modal').modal('hide');
-                    get_list_deparment()
+                    get_list_unit()
 
                     Swal.fire({
                         title: "Berhasil",
@@ -133,7 +129,7 @@
             });
         }
 
-        function delete_department(id) {
+        function delete_unit(id) {
             if(id == '' || id == null) {
                 return false;
             }
@@ -147,7 +143,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type : 'DELETE',
-                        url: '<?= base_url("api/masterdata/department") ?>?id='+id,
+                        url: '<?= base_url("api/masterdata/unit") ?>?id='+id,
                         cache: false,
                         dataType : 'json',
                         beforeSend: function() {
@@ -155,7 +151,7 @@
                         },
                         success: function(data) {
                             $('#add_modal').modal('hide');
-                            get_list_deparment()
+                            get_list_unit()
 
                             Swal.fire("Berhasil", "Data Berhasil Hapus", "success");
                         },
@@ -178,24 +174,24 @@
             
         }
 
-        function edit_department(id) {
+        function edit_unit(id) {
             if(id == '' || id == null) {
                 return false;
             }
 
             $.ajax({
                 type : 'GET',
-                url: '<?= base_url("api/masterdata/department")?>?id='+id,
+                url: '<?= base_url("api/masterdata/unit")?>?id='+id,
                 cache: false,
                 dataType : 'json',
                 beforeSend: function() {
                     showLoading();
                 },
                 success: function(data) {
-                    $('#id_department').val(id);
-                    $('#name_department').val(data.data.name);
-                    $('#description_department').val(data.data.description);
-                    $('#active_department').val(data.data.active);
+                    $('#id_unit').val(id);
+                    $('#name_unit').val(data.data.name);
+                    $('#description_unit').val(data.data.description);
+                    $('#active_unit').val(data.data.active);
 
                     $('.modal-title').html('Edit Data')
                     $('#add_modal').modal('show');
@@ -244,10 +240,10 @@
         <div class="container-fluid px-4">
             <div class="card">
                 <div class="card-body">
-                    <table id="datatablesSimple" class="table-department">
+                    <table id="datatablesSimple" class="table-unit">
                         <thead>
                             <tr>
-                                <th>Nama Departemen</th>
+                                <th>Nama Unit</th>
                                 <th>Deskripsi</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -255,7 +251,7 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Nama Departemen</th>
+                                <th>Nama Unit</th>
                                 <th>Deskripsi</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -278,23 +274,23 @@
                 <div class="modal-body">
                     <div class="row" style="padding: 0px 20px 0px 20px">
                         <form id="add_form">
-                            <input type="hidden" class="form-control add_dep" id="id_department" name="id">
+                            <input type="hidden" class="form-control add_dep" id="id_unit" name="id">
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-12">
-                                    <label class="small mb-12" for="name_department">Nama Departemen</label>
-                                    <input class="form-control add_dep" id="name_department" name="name" type="text" placeholder="Departemen"/>
+                                    <label class="small mb-12" for="name_unit">Nama Unit</label>
+                                    <input class="form-control add_dep" id="name_unit" name="name" type="text" placeholder="Unit"/>
                                 </div>
                             </div>
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-12">
-                                    <label class="small mb-12" for="description_department">Deskripsi</label>
-                                    <textarea class="form-control add_dep" id="description_department" name="description" type="text" placeholder="Deskripsi Departemen"></textarea>
+                                    <label class="small mb-12" for="description_unit">Deskripsi</label>
+                                    <textarea class="form-control add_dep" id="description_unit" name="description" type="text" placeholder="Deskripsi Unit"></textarea>
                                 </div>
                             </div>
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-12">
-                                    <label class="small mb-12" for="active_department">Status</label>
-                                    <select class="form-control add_dep" id="active_department" name="active">
+                                    <label class="small mb-12" for="active_unit">Status</label>
+                                    <select class="form-control add_dep" id="active_unit" name="active">
                                         <option value="" disabled selected>Pilih Status...</option>
                                         <option value="1" >Aktif</option>
                                         <option value="0" >Non-Aktif</option>
@@ -306,10 +302,9 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-light btn-sm" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></i> &nbsp; Keluar</button>
-                    <button class="btn btn-light btn-sm" type="button" onclick="save_department()"><i class="fa-regular fa-floppy-disk"></i> &nbsp; Simpan</button>
+                    <button class="btn btn-light btn-sm" type="button" onclick="save_unit()"><i class="fa-regular fa-floppy-disk"></i> &nbsp; Simpan</button>
                 </div>
             </div>
         </div>
     </div>
-
 <?= $this->endSection() ?>

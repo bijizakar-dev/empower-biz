@@ -3,9 +3,9 @@ function generateSidebar($menuItems) {
     $html = '';
 
     $categories = [
-        'Core'      => ['Dashboard'],
-        'Data'      => ['Masterdata', 'Layanan'],
-        'Sistem'    => ['Pengaturan', 'Akun'],
+        'Core'              => ['Dashboard'],
+        'Data & Layanan'    => ['Masterdata', 'Layanan'],
+        'Sistem'            => ['Pengaturan', 'Akun'],
     ];
 
     foreach ($categories as $category => $items) {
@@ -106,12 +106,11 @@ $menuItems = [
         'url' => 'masterdata',
         'icon' => 'columns',
         'submenu' => [
-            ['name' => 'Pegawai', 'url' => 'masterdata/employee'],
+            ['name' => 'Pegawai', 'url' => '#'],
             ['name' => 'Departemen', 'url' => 'masterdata/department'],
-            ['name' => 'Tim', 'url' => 'masterdata/team'],
-            ['name' => 'Jadwal Libur', 'url' => 'masterdata/holiday'],
-            ['name' => 'Referensi Jenis', 'url' => 'masterdata/ReferenceType'],
-            ['name' => 'Status Pegawai', 'url' => 'masterdata/statusEmployee'],
+            ['name' => 'Warehouse', 'url' => 'masterdata/warehouse'],
+            ['name' => 'Supplier', 'url' => '#'],
+            ['name' => 'Unit', 'url' => 'masterdata/unit'],
         ],
     ],
     [
@@ -119,24 +118,10 @@ $menuItems = [
         'url' => '#',
         'icon' => 'grid',
         'submenu' => [
-            ['name' => 'Absensi / Presensi', 'url' => 'absen'],
-            [
-                'name' => 'Izin', 
-                'url' => 'service',
-                'submenu' => [
-                    ['name' => 'Pengajuan Izin', 'url' => 'service/requestPermit'],
-                    ['name' => 'List Izin', 'url' => 'service/permit'],
-                ]
-            ],
-            [
-                'name' => 'Cuti', 
-                'url' => 'service/requestPermit',
-                'submenu' => [
-                    ['name' => 'Pengajuan Cuti', 'url' => 'service/requestPaidLeave'],
-                    ['name' => 'List Cuti', 'url' => 'service/paidLeave'],
-                ]
-            ],
-            ['name' => 'Lembur', 'url' => 'lembur']
+            ['name' => 'Permintaan Barang', 'url' => '#'],
+            ['name' => 'Pemesanan Barang', 'url' => '#'],
+            ['name' => 'Penerimaan Barang', 'url' => '#'],
+            ['name' => 'Permintaan Penjualan', 'url' => '#'],
         ],
     ],
     [
@@ -145,7 +130,7 @@ $menuItems = [
         'icon' => 'tool',
         'submenu' => [
             ['name' => 'User', 'url' => 'sistem/user'],
-            ['name' => 'Role', 'url' => 'sistem/role'],
+            ['name' => 'Role', 'url' => 'system/role'],
             ['name' => 'Setting Aplikasi', 'url' => 'setting-app'],
         ],
     ],

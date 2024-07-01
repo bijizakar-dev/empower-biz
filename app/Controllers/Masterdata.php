@@ -17,4 +17,16 @@ class Masterdata extends BaseController
 
         return view('masterdata/department', $data);
     }
+
+    public function getWarehouse() {
+        $data['title'] = "Warehouse";
+
+        return view('masterdata/warehouse', $data);
+    }
+
+    public function getUnit() {
+        $data['title'] = "Satuan";
+
+        return view('masterdata/unit', $data);
+    }
 }
