@@ -29,4 +29,10 @@ class Masterdata extends BaseController
 
         return view('masterdata/unit', $data);
     }
+
+    public function getSupplier() {
+        $data['title'] = "Supplier";
+
+        return view('masterdata/supplier', $data);
+    }
 }

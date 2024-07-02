@@ -109,7 +109,7 @@ $menuItems = [
             ['name' => 'Pegawai', 'url' => '#'],
             ['name' => 'Departemen', 'url' => 'masterdata/department'],
             ['name' => 'Warehouse', 'url' => 'masterdata/warehouse'],
-            ['name' => 'Supplier', 'url' => '#'],
+            ['name' => 'Supplier', 'url' => 'masterdata/supplier'],
             ['name' => 'Unit', 'url' => 'masterdata/unit'],
         ],
     ],
