@@ -35,4 +35,11 @@ class Masterdata extends BaseController
 
         return view('masterdata/supplier', $data);
     }
+
+    public function getEmployee() {
+        $data['title'] = "Pegawai";
+        $data['department'] = $this->m_department->get_all_department();
+
+        return view('masterdata/employee', $data);
+    }
 }

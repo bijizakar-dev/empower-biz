@@ -3,6 +3,7 @@
 namespace App\Controllers\Api;
 
 use App\Models\Masterdata\Department;
+use App\Models\Masterdata\Employee;
 use App\Models\Masterdata\Supplier;
 use App\Models\Masterdata\SupplierContact;
 use App\Models\Masterdata\Unit;
@@ -19,6 +20,7 @@ class Masterdata extends ResourceController
         $this->m_unit = new Unit();
         $this->m_supplier = new Supplier();
         $this->m_supplier_contact = new SupplierContact();
+        $this->m_employee = new Employee();
     }
 
     private function start($page){
@@ -387,5 +389,115 @@ class Masterdata extends ResourceController
     }
     /* SUPPLIERS CONTACT */
 
+    /* EMPLOYEES */
+    public function getListEmployee(): ResponseInterface {
+         // if(!$this->request->getVar('page')){
+        //     return $this->respond(NULL, 400);
+        // }
+
+        $search = array(
+            'search'            => $this->request->getVar('search'),
+            'nip'               => $this->request->getVar('nip'),
+            'name'              => $this->request->getVar('name'),
+            'gender'            => $this->request->getVar('gender'),
+            'birth_date'        => $this->request->getVar('birth_date'),
+            'education'         => $this->request->getVar('education'),
+            'id_department'     => $this->request->getVar('id_department'),
+            'active'            => $this->request->getVar('active'),
+        );
+
+        $start = $this->start($this->request->getVar('page'));
+
+        $data = $this->m_employee->get_list_employee($this->limit, $start, $search);
+        $data['page'] = (int)$this->request->getVar('page');
+        $data['limit'] = $this->limit;
+
+        if($data){
+            return $this->respond($data, 200); 
+        }else{
+            return $this->respond(array('error' => 'Data tidak ditemukan'), 404);
+        }
+    }
+
+    public function getEmployee(): ResponseInterface {
+        if(!$this->request->getVar('id')){
+            return $this->respond(NULL, 400);
+        }
+
+        $data['data'] = $this->m_employee->get_employee($this->request->getVar('id'));
+        $data['page'] = 1;
+        $data['limit'] = $this->limit;
+
+        if($data){
+            return $this->respond($data, 200); 
+        }else{
+            return $this->respond(array('error' => 'Data tidak ditemukan'), 404);
+        }
+    }
+
+    private function generateNIP($seq, $idDep, $joinYear): String {
+        $seq = str_pad($seq, 3, '0', STR_PAD_LEFT);
+        $idDep = str_pad($idDep, 2, '0', STR_PAD_LEFT);
+
+        $nip = 'EB-'.$idDep.$joinYear.'-'.$seq;
+
+        return $nip;
+    }
+
+    public function postEmployee(): ResponseInterface {
+        $id = null;
+        if($this->request->getPost('id')){
+            $id = $this->request->getPost('id');
+        }
+
+        $add = array (
+            'id' => $id,
+            'nip' => $this->request->getPost('nip'),
+            'name' => $this->request->getPost('name'),
+            'gender' => $this->request->getPost('gender'),
+            'birth_date' => $this->request->getPost('birth_date'),
+            'phone_number' => $this->request->getPost('phone_number'),
+            'address' => $this->request->getPost('address'),
+            'education' => $this->request->getPost('education'),
+            'id_department' => $this->request->getPost('id_department'),
+            'photo' => null,
+            'active' => $this->request->getPost('active')
+        );
+
+        $insEmployee = $this->m_employee->update_employee($add);
+
+        // header('Content-Type: application/json');
+        // die(json_encode($insEmployee));
+
+        if($this->request->getPost('nip') == '' || $this->request->getPost('nip') == null) {
+            if($insEmployee) {
+                $createYear = date('Y-m-d');
+                $nip = $this->generateNIP($insEmployee['id'], $this->request->getPost('id_department'), date('Y', strtotime($createYear)));
+                $addNIP = array (
+                    'id' => $insEmployee['id'],
+                    'nip' => $nip,
+                );
+                $this->m_employee->update_employee($addNIP);
+            }
+        }
+        
+
+        return $this->respond($insEmployee, 200);
+    }
+
+    public function deleteEmployee(): ResponseInterface {
+        if(!$this->request->getVar('id')){
+            return $this->respond(NULL, 400);
+        }
+
+        $result = $this->m_employee->delete_employee($this->request->getVar('id'));
+
+        if($result){
+            return $this->respond(array('status' => $result), 200); 
+        }else{
+            return $this->respond(array('status' => false), 200);
+        }
+    }
+    /* EMPLOYEES */
 
 }

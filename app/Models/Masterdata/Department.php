@@ -66,4 +66,20 @@ class Department extends Model
         
         return $res;
     }
+
+    function get_all_department() {
+        $sql = "SELECT d.id, d.name 
+                FROM departments d
+                WHERE d.deleted_at is null  
+                order by d.name asc ";
+
+        $query = $this->query($sql)->getResult();
+        $data =  array();
+
+        foreach ($query as $key => $value) {
+            $data[$value->id] = $value->name;
+        }
+
+        return $data;
+    }
 }
