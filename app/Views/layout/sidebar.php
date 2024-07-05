@@ -126,10 +126,10 @@ $menuItems = [
     ],
     [
         'name' => 'Pengaturan',
-        'url' => 'sistem',
+        'url' => 'system',
         'icon' => 'tool',
         'submenu' => [
-            ['name' => 'User', 'url' => 'sistem/user'],
+            ['name' => 'User', 'url' => 'system/user'],
             ['name' => 'Role', 'url' => 'system/role'],
             ['name' => 'Setting Aplikasi', 'url' => 'setting-app'],
         ],

@@ -116,4 +116,22 @@ class Employee extends Model
         
         return $res;
     }
+
+    function get_all_employee(){
+        $sql = "SELECT e.*, d.name as department_name
+                FROM employees e 
+                JOIN departments d ON (e.id_department = d.id)
+                WHERE e.deleted_at is null 
+                    AND e.active = 1 
+                ORDER BY e.id asc ";
+
+        $query = $this->query($sql)->getResult();
+        $data =  array();
+
+        foreach ($query as $key => $value) {
+            $data[$value->id] = $value->name;
+        }
+
+        return $data;
+    }
 }
