@@ -3,18 +3,19 @@
 namespace App\Models\System;
 
 use CodeIgniter\Model;
+use Exception;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class User extends Model
 {
     protected $table            = 'users';
     protected $primaryKey       = 'id';
     protected $returnType       = 'object';
-    protected $allowedFields    = ['username', 'email', 'password', 'id_employee', 'id_role', 'token', 'active', 'deleted_at'];
+    protected $allowedFields    = ['username', 'email', 'password', 'id_employee', 'id_role', 'token', 'active', 'deleted_at', 'expiry_token'];
     protected $useTimestamps    = true;
     protected $useSoftDeletes   = true;
 
-    protected function hashPassword(String $password)
-    {
+    protected function hashPassword(String $password) {
         if ($password != '') {
             $password = password_hash($password, PASSWORD_DEFAULT);
         }
@@ -118,6 +119,55 @@ class User extends Model
         $res = $this->where('id', $id)->update($id, $data);
         
         return $res;
+    }
+
+
+    // FUNCTION LOGIN LOGOUT
+    function get_user_by_username_email($identity) {
+        $data = (Object) [
+            "status" => FALSE,
+            "response" => NULL
+        ];
+
+        $q = '';
+
+        if (filter_var($identity, FILTER_VALIDATE_EMAIL)) {
+            $q .= "WHERE email = '".$identity."' ";
+        } else {
+            $q .= "WHERE username = '".$identity."' ";
+        }
+
+        $sql = "SELECT u.*, e.name, e.id_department, e.photo, r.name as name_role, d.name as name_department
+                FROM users u
+                JOIN roles r ON u.id_role = r.id
+                JOIN employees e ON u.id_employee = e.id
+                JOIN departments d ON e.id_department = d.id
+                $q 
+                AND u.deleted_at IS NULL
+                LIMIT 1";
+                
+        $result = $this->query($sql)->getRow();
+
+        if(!empty($result)) {
+            $data->status = TRUE;
+            $data->response = $result;
+        }
+
+        return $data;
+    }
+
+    function update_token($user_id, $token, $expiry) {
+        return $this->update($user_id, [
+            'token' => $token,
+            'expiry_token' => $expiry
+        ]);
+    } 
+
+    function clear_token($id) {
+        return $this->update($id, [
+            'token' => null, 
+            'expiry_token' => null
+        ]);
     }
 
 }

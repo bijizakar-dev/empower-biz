@@ -150,7 +150,7 @@ $menuItems = [
     <div class="sidenav-footer">
         <div class="sidenav-footer-content">
             <div class="sidenav-footer-subtitle">Logged in as:</div>
-            <div class="sidenav-footer-title">Valerie Luna</div>
+            <div class="sidenav-footer-title"><?= session()->get('username'); ?> ( <?= session()->get('role'); ?> )</div>
         </div>
     </div>
 </nav>

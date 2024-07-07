@@ -9,6 +9,6 @@ use CodeIgniter\Router\RouteCollection;
 $routes->setAutoRoute(true);
 // $routes->setTranslateURIDashes(true);
 
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Home::getDashboard');
 
 
