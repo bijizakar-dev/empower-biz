@@ -1,4 +1,13 @@
 <?php
+
+use App\Models\System\Menu;
+
+
+$this->m_menu = new Menu();
+$menuItems = $this->m_menu->getMenuSidebar();
+// header('Content-Type: application/json');
+// die(json_encode($menuItems));
+
 function generateSidebar($menuItems) {
     $html = '';
 
@@ -20,7 +29,7 @@ function generateCategory($category, $items, $menuItems) {
     $html .= '<div class="sidenav-menu-heading">'.$category.'</div>';
 
     $filteredItems = array_filter($menuItems, function($menuItem) use ($items) {
-        return in_array($menuItem['name'], $items);
+        return in_array($menuItem->name, $items);
     });
     $html .= generateMenuItems($filteredItems);
 
@@ -40,22 +49,22 @@ function generateMenuItems($menuItems, $parentId = 'accordionSidenav', $isSubmen
     $currentUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
     foreach ($menuItems as $item) {
-        $collapseId = 'collapse' . str_replace(' ', '', $item['name']);
-        $icon = isset($item['icon']) ? $item['icon'] : '';
+        $collapseId = 'collapse' . str_replace(' ', '', $item->name);
+        $icon = isset($item->icon) ? $item->icon : '';
         $activeClass = '';
 
-        if (isset($item['submenu'])) {
+        if (isset($item->submenu)) {
             $submenuActive = false;
-            foreach ($item['submenu'] as $subItem) {
-                if ($currentUrl === '/' . trim($subItem['url'], '/')) {
+            foreach ($item->submenu as $subItem) {
+                if ($currentUrl === '/' . trim($subItem->path, '/')) {
                     $submenuActive = true;
                     $activeClass = 'active';
                     break;
                 }
 
-                if (isset($subItem['submenu'])) {
-                    foreach ($subItem['submenu'] as $subSubItem) {
-                        if ($currentUrl === '/' . trim($subSubItem['url'], '/')) {
+                if (isset($subItem->submenu)) {
+                    foreach ($subItem->submenu as $subSubItem) {
+                        if ($currentUrl === '/' . trim($subSubItem->path, '/')) {
                             $submenuActive = true;
                             $activeClass = 'active';
                             break 2; // Break out of both loops
@@ -68,22 +77,22 @@ function generateMenuItems($menuItems, $parentId = 'accordionSidenav', $isSubmen
             if ($icon) {
                 $html .= '<div class="nav-link-icon"><i data-feather="'.$icon.'"></i></div>';
             }
-            $html .= $item['name'];
+            $html .= $item->name;
             $html .= '<div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>';
             $html .= '</a>';
             $html .= '<div class="collapse '.($submenuActive ? 'show' : '').'" id="'.$collapseId.'" data-bs-parent="#'.$parentId.'">';
-            $html .= generateMenuItems($item['submenu'], $collapseId, true);
+            $html .= generateMenuItems($item->submenu, $collapseId, true);
             $html .= '</div>';
         } else {
-            if ($currentUrl === '/' . trim($item['url'], '/')) {
+            if ($currentUrl === '/' . trim($item->path, '/')) {
                 $activeClass = 'active';
             }
 
-            $html .= '<a class="nav-link '.$activeClass.'" href="'.base_url().$item['url'].'">';
+            $html .= '<a class="nav-link '.$activeClass.'" href="'.base_url().$item->path.'">';
             if ($icon) {
                 $html .= '<div class="nav-link-icon"><i data-feather="'.$icon.'"></i></div>';
             }
-            $html .= $item['name'];
+            $html .= $item->name;
             $html .= '</a>';
         }
     }
@@ -95,51 +104,51 @@ function generateMenuItems($menuItems, $parentId = 'accordionSidenav', $isSubmen
     return $html;
 }
 
-$menuItems = [
-    [
-        'name' => 'Dashboard',
-        'url' => '',
-        'icon' => 'activity',
-    ],
-    [
-        'name' => 'Masterdata',
-        'url' => 'masterdata',
-        'icon' => 'columns',
-        'submenu' => [
-            ['name' => 'Pegawai', 'url' => 'masterdata/employee'],
-            ['name' => 'Departemen', 'url' => 'masterdata/department'],
-            ['name' => 'Warehouse', 'url' => 'masterdata/warehouse'],
-            ['name' => 'Supplier', 'url' => 'masterdata/supplier'],
-            ['name' => 'Unit', 'url' => 'masterdata/unit'],
-        ],
-    ],
-    [
-        'name' => 'Layanan',
-        'url' => '#',
-        'icon' => 'grid',
-        'submenu' => [
-            ['name' => 'Permintaan Barang', 'url' => '#'],
-            ['name' => 'Pemesanan Barang', 'url' => '#'],
-            ['name' => 'Penerimaan Barang', 'url' => '#'],
-            ['name' => 'Permintaan Penjualan', 'url' => '#'],
-        ],
-    ],
-    [
-        'name' => 'Pengaturan',
-        'url' => 'system',
-        'icon' => 'tool',
-        'submenu' => [
-            ['name' => 'User', 'url' => 'system/user'],
-            ['name' => 'Role', 'url' => 'system/role'],
-            ['name' => 'Setting Aplikasi', 'url' => 'setting-app'],
-        ],
-    ],
-    [
-        'name' => 'Akun',
-        'url' => '#',
-        'icon' => 'user',
-    ],
-];
+// $menuItems = [
+//     [
+//         'name' => 'Dashboard',
+//         'path' => '',
+//         'icon' => 'activity',
+//     ],
+//     [
+//         'name' => 'Masterdata',
+//         'path' => 'masterdata',
+//         'icon' => 'columns',
+//         'submenu' => [
+//             ['name' => 'Pegawai', 'path' => 'masterdata/employee'],
+//             ['name' => 'Departemen', 'path' => 'masterdata/department'],
+//             ['name' => 'Warehouse', 'path' => 'masterdata/warehouse'],
+//             ['name' => 'Supplier', 'path' => 'masterdata/supplier'],
+//             ['name' => 'Unit', 'path' => 'masterdata/unit'],
+//         ],
+//     ],
+//     [
+//         'name' => 'Layanan',
+//         'path' => '#',
+//         'icon' => 'grid',
+//         'submenu' => [
+//             ['name' => 'Permintaan Barang', 'path' => '#'],
+//             ['name' => 'Pemesanan Barang', 'path' => '#'],
+//             ['name' => 'Penerimaan Barang', 'path' => '#'],
+//             ['name' => 'Permintaan Penjualan', 'path' => '#'],
+//         ],
+//     ],
+//     [
+//         'name' => 'Pengaturan',
+//         'path' => 'system',
+//         'icon' => 'tool',
+//         'submenu' => [
+//             ['name' => 'User', 'path' => 'system/user'],
+//             ['name' => 'Role', 'path' => 'system/role'],
+//             ['name' => 'Setting Aplikasi', 'path' => 'setting-app'],
+//         ],
+//     ],
+//     [
+//         'name' => 'Akun',
+//         'path' => '#',
+//         'icon' => 'user',
+//     ],
+// ];
 
 ?>
 
