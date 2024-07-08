@@ -56,6 +56,8 @@
             $('.add_user').val('');
             $('.show_emp').html('');
             $('.update_user').show();
+            $('#password_user').attr('disabled', false);
+            $('#password_user').attr('read-only', false);
             $('#id_employee_user').attr('disabled', false);
 
             $('#img_emp').removeAttr('src')
@@ -237,6 +239,9 @@
 
                     $('#id_employee_user').attr('disabled', true);
                     $('.update_user').hide();
+
+                    $('#password_user').attr('disabled', true);
+                    $('#password_user').attr('read-only', true);
 
                     // Set the hidden input value and disable the select
                     let idEmpVal = $('#id_employee_user').val();

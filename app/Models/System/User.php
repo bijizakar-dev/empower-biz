@@ -66,7 +66,7 @@ class User extends Model
     }
 
     function update_user(Array $param) {
-        $data = [
+        $result = [
             'success' => false,
             'message' => '',
             'id' => null,
@@ -75,42 +75,56 @@ class User extends Model
         $validation = service('validation'); 
         $validation->setRules([
             'username'  => 'required|is_unique[users.username,id,'          . (isset($param['id']) ? $param['id'] : 'NULL') . ']',
-            'email'     => 'required|valid_email|is_unique[users.email,id,' . (isset($param['id']) ? $param['id'] : 'NULL') . ']',
-            'password'  => isset($param['password']) ? 'required' : ''
+            'email'     => 'required|valid_email|is_unique[users.email,id,' . (isset($param['id']) ? $param['id'] : 'NULL') . ']'
         ]);
     
         if (!$validation->run($param)) {
-            $data['message'] = implode('<br>', $validation->getErrors());
-            return $data;
+            $result['message'] = implode('<br>', $validation->getErrors());
+            return $result;
         }
-    
-        $param['password'] = $this->hashPassword($param['password']);
+        
+        if(isset($param['id']) && !empty($param['id'])) {
+            $data = array(
+                "id" => $param['id'],
+                "username" => $param['username'],
+                "email" => $param['email'],
+                "id_employee" => $param['id_employee'],
+                "id_role" => $param['id_role'],
+                "active" => $param['active']
+            );
+        } else {
+            $data = $param;
+        }
+
+        if(isset($data['password']) && $data['password'] != null) {
+            $data['password'] = $this->hashPassword($data['password']);
+        }
     
         try {
-            if (isset($param['id']) && !empty($param['id'])) {
+            if (isset($data['id']) && !empty($data['id'])) {
                 // Update
-                $res = $this->update($param['id'], $param);
+                $res = $this->update($data['id'], $data);
                 if (!$res) {
                     throw new Exception($this->error()['message']);
                 }
-                $data['id'] = $param['id'];
-                $data['message'] = "Berhasil mengubah data user";
+                $result['id'] = $data['id'];
+                $result['message'] = "Berhasil mengubah data user";
             } else {
                 // Insert
-                $res = $this->insert($param);
+                $res = $this->insert($data);
                 if (!$res) {
                     throw new Exception($this->error()['message']);
                 }
-                $data['id'] = $this->insertID();
-                $data['message'] = "Berhasil menambahkan data user";
+                $result['id'] = $this->insertID();
+                $result['message'] = "Berhasil menambahkan data user";
             }
     
-            $data['success'] = true;
+            $result['success'] = true;
         } catch (Exception $e) {
-            $data['message'] = $e->getMessage();
+            $result['message'] = $e->getMessage();
         }
     
-        return $data;
+        return $result;
     }
     
     function delete_user($id) {
