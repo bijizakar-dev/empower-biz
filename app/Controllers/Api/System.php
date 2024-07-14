@@ -130,6 +130,7 @@ class System extends ResourceController
 
     public function postSavePermissionRole(): ResponseInterface {
         $permission = $this->request->getPost('permission');
+        $id_role = $this->request->getPost('id_role');
 
         $items = [];
         $data = [
@@ -139,7 +140,8 @@ class System extends ResourceController
 
         foreach($permission as $i => $item) {
             $items[] = [
-                'id'            => $item['id'],
+                'id_item_menu'  => $item['id_item_menu'],
+                'id_role'       => $item['id_role'],
                 'active'        => $item['active'],
                 'add'           => $item['add'],
                 'edit'          => $item['edit'],
@@ -148,9 +150,18 @@ class System extends ResourceController
                 'import'        => $item['import'],
                 'export'        => $item['export']
             ];
+        };
+        
+        $checkPermission = $this->m_item_menu_permission->get_permission_by_role_id($id_role);
+
+        if (!empty($checkPermission)) {
+            $this->m_item_menu_permission->where('id_role', $id_role)->delete();
         }
 
-        $result = $this->m_item_menu_permission->updateBatch($items, 'id');
+        $result = $this->m_item_menu_permission->insertBatch($items);
+
+        // header('Content-Type: application/json');
+        // die(json_encode($result));
 
         if (!$result) {
             $data['status'] = false;

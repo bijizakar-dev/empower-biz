@@ -252,12 +252,12 @@
                                     let checked = val[action] == 1 ? 'checked' : '';
                                     formCheck += '<td class="text-center">'+
                                                     '<div class="form-check">'+
-                                                        '<input class="form-check-input" type="checkbox" ' + checked + ' data-id="' + val.id + '" data-action="' + action + '">'+
+                                                        '<input class="form-check-input" type="checkbox" ' + checked + ' data-item="' + val.id_item_menu + '" data-role="' + val.id_role + '" data-action="' + action + '">'+
                                                     '</div>'+
                                                 '</td>';
                                 });
 
-                                str += '<tr data-id="'+val.id+'">'+
+                                str += '<tr data-item="' + val.id_item_menu + '" data-role="'+val.id_role+'">'+
                                             '<td>'+val.name_item_menu+'</td>'+
                                             formCheck+
                                         '</tr>';
@@ -310,14 +310,17 @@
 
         function save_role_permission_role() {
             let permissions = [];
+            let id = $('#id_role_edit').val();
 
             $('#table-permission tr').each(function() {
                 let row = $(this);
-                let id = row.data('id');
-
-                if (id) {
+                let id_item_menu = row.data('item');
+                let id_role = row.data('role');
+                
+                if (id_item_menu) {
                     let permission = {
-                        id: id,
+                        id_item_menu: id_item_menu,
+                        id_role: id_role,
                         active: row.find('input[data-action="active"]').is(':checked') ? 1 : 0,
                         add: row.find('input[data-action="add"]').is(':checked') ? 1 : 0,
                         edit: row.find('input[data-action="edit"]').is(':checked') ? 1 : 0,
@@ -334,7 +337,7 @@
             $.ajax({
                 type: 'POST',
                 url: '<?= base_url("api/system/savePermissionRole") ?>',
-                data: {permission: permissions},
+                data: {permission: permissions, id_role: id},
                 dataType: 'json',
                 success: function(response) {
                     if(response.status == true) {
@@ -529,162 +532,8 @@
                                             </tr>
                                         </thead>
                                         <tbody id="table-permission">
-                                            <tr><td colspan=9 style="background-color: #f2f2f2">Masterdata</td></tr>
-                                            <tr>
-                                                <td>Department</td>
-                                                <td>
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Department</td>
-                                                <td>
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr><td colspan=9 style="background-color: #f2f2f2">Layanan</td></tr>
-                                            <tr>
-                                                <td>Department</td>
-                                                <td>
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check" style="align-items: center;">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Department</td>
-                                                <td>
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="form-check text-center">
-                                                        <input class="form-check-input" type="checkbox" id="access_1_1" name="access[1][1]" value="1">
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            
                                         </tbody>
-                                    </table>
                                     </table>
                                 </div>
                             </div>

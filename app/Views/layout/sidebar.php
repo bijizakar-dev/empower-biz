@@ -104,52 +104,6 @@ function generateMenuItems($menuItems, $parentId = 'accordionSidenav', $isSubmen
     return $html;
 }
 
-// $menuItems = [
-//     [
-//         'name' => 'Dashboard',
-//         'path' => '',
-//         'icon' => 'activity',
-//     ],
-//     [
-//         'name' => 'Masterdata',
-//         'path' => 'masterdata',
-//         'icon' => 'columns',
-//         'submenu' => [
-//             ['name' => 'Pegawai', 'path' => 'masterdata/employee'],
-//             ['name' => 'Departemen', 'path' => 'masterdata/department'],
-//             ['name' => 'Warehouse', 'path' => 'masterdata/warehouse'],
-//             ['name' => 'Supplier', 'path' => 'masterdata/supplier'],
-//             ['name' => 'Unit', 'path' => 'masterdata/unit'],
-//         ],
-//     ],
-//     [
-//         'name' => 'Layanan',
-//         'path' => '#',
-//         'icon' => 'grid',
-//         'submenu' => [
-//             ['name' => 'Permintaan Barang', 'path' => '#'],
-//             ['name' => 'Pemesanan Barang', 'path' => '#'],
-//             ['name' => 'Penerimaan Barang', 'path' => '#'],
-//             ['name' => 'Permintaan Penjualan', 'path' => '#'],
-//         ],
-//     ],
-//     [
-//         'name' => 'Pengaturan',
-//         'path' => 'system',
-//         'icon' => 'tool',
-//         'submenu' => [
-//             ['name' => 'User', 'path' => 'system/user'],
-//             ['name' => 'Role', 'path' => 'system/role'],
-//             ['name' => 'Setting Aplikasi', 'path' => 'setting-app'],
-//         ],
-//     ],
-//     [
-//         'name' => 'Akun',
-//         'path' => '#',
-//         'icon' => 'user',
-//     ],
-// ];
-
 ?>
 
 <nav class="sidenav shadow-right sidenav-light">
