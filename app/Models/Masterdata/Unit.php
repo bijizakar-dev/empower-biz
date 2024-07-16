@@ -66,4 +66,20 @@ class Unit extends Model
         
         return $res;
     }
+
+    function get_all_unit(){
+        $sql = "SELECT * FROM units
+                WHERE deleted_at IS NULL
+                    AND active = 1 
+                ORDER BY name ASC ";
+
+        $query = $this->query($sql)->getResult();
+        $data =  array();
+
+        foreach ($query as $key => $value) {
+            $data[$value->id] = $value->name;
+        }
+
+        return $data;
+    }
 }

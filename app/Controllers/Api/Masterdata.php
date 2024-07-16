@@ -7,6 +7,7 @@ use App\Models\Masterdata\Employee;
 use App\Models\Masterdata\Supplier;
 use App\Models\Masterdata\SupplierContact;
 use App\Models\Masterdata\Unit;
+use App\Models\Masterdata\Item;
 use App\Models\Masterdata\Warehouse;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
@@ -21,6 +22,7 @@ class Masterdata extends ResourceController
         $this->m_supplier = new Supplier();
         $this->m_supplier_contact = new SupplierContact();
         $this->m_employee = new Employee();
+        $this->m_item = new Item();
     }
 
     private function start($page){
@@ -499,5 +501,108 @@ class Masterdata extends ResourceController
         }
     }
     /* EMPLOYEES */
+
+    /* ITEMS */
+    public function getListItem(): ResponseInterface {
+        // if(!$this->request->getVar('page')){
+       //     return $this->respond(NULL, 400);
+       // }
+
+       $search = array(
+           'search'           => $this->request->getVar('search'),
+           'name'             => $this->request->getVar('name'),
+           'code'             => $this->request->getVar('code'),
+           'id_warehouse'     => $this->request->getVar('id_warehouse'),
+           'id_unit'          => $this->request->getVar('id_unit'),
+           'active'           => $this->request->getVar('active'),
+       );
+
+       $start = $this->start($this->request->getVar('page'));
+
+       $data = $this->m_item->get_list_item($this->limit, $start, $search);
+       $data['page'] = (int)$this->request->getVar('page');
+       $data['limit'] = $this->limit;
+
+       if($data){
+           return $this->respond($data, 200); 
+       }else{
+           return $this->respond(array('error' => 'Data tidak ditemukan'), 404);
+       }
+    }
+
+    public function getItem(): ResponseInterface {
+        if(!$this->request->getVar('id')){
+            return $this->respond(NULL, 400);
+        }
+
+        $data['data'] = $this->m_item->get_item($this->request->getVar('id'));
+        $data['page'] = 1;
+        $data['limit'] = $this->limit;
+
+        if($data){
+            return $this->respond($data, 200); 
+        }else{
+            return $this->respond(array('error' => 'Data tidak ditemukan'), 404);
+        }
+    }
+
+    private function generateCodeItem($seq, $idWarehouse, $joinYear): String {
+        $seq = str_pad($seq, 3, '0', STR_PAD_LEFT);
+        $idWarehouse = str_pad($idWarehouse, 2, '0', STR_PAD_LEFT);
+
+        $code = $idWarehouse.'/'.$joinYear.'-'.$seq;
+
+        return $code;
+    }
+
+    public function postItem(): ResponseInterface {
+        $id = null;
+        if($this->request->getPost('id')){
+            $id = $this->request->getPost('id');
+        }
+
+        $add = array (
+            'id' => $id,
+            'id_warehouse' => $this->request->getPost('id_warehouse'),
+            'id_unit' => $this->request->getPost('id_unit'),
+            'code' => $this->request->getPost('code'),
+            'name' => $this->request->getPost('name'),
+            'active' => $this->request->getPost('active')
+        );
+
+        $insItem = $this->m_item->update_item($add);
+
+        // header('Content-Type: application/json');
+        // die(json_encode($insEmployee));
+
+        if($this->request->getPost('code') == '' || $this->request->getPost('code') == null) {
+            if($insItem) {
+                $createYear = date('Y-m-d');
+                $code = $this->generateCodeItem($insItem['id'], $this->request->getPost('id_warehouse'), date('Y', strtotime($createYear)));
+                $addCode = array (
+                    'id' => $insItem['id'],
+                    'code' => $code,
+                );
+                $this->m_item->update_item($addCode);
+            }
+        }
+        
+        return $this->respond($insItem, 200);
+    }
+
+    public function deleteItem(): ResponseInterface {
+        if(!$this->request->getVar('id')){
+            return $this->respond(NULL, 400);
+        }
+
+        $result = $this->m_item->delete_item($this->request->getVar('id'));
+
+        if($result){
+            return $this->respond(array('status' => $result), 200); 
+        }else{
+            return $this->respond(array('status' => false), 200);
+        }
+    }
+    /* ITEMS */
 
 }

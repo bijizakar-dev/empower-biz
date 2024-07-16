@@ -5,11 +5,43 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+    <style type="text/css">
+        #add {
+            display: none;
+        }
+    </style>
+
     <script src="<?= base_url()?>/assets/js/simple-datatables.min.js"></script>
     <script type="text/javascript">
+        let permissions = <?= json_encode($permissions) ?>
+
+        let permission_add = false;
+        let permission_edit = false;
+        let permission_delete = false;
+        if (permissions.length != 0 ) {
+            let permission = permissions[0];
+
+            if (permission.add == 1) {
+                permission_add = true;
+            }
+
+            if (permission.edit == 1) {
+                permission_edit = true;
+            }
+
+            if (permission.delete == 1) {
+                permission_delete = true;
+            }
+        }
+
         var dataTable1;
 
         $(function() {
+
+            // CHECK ROLE PERMISSIONS USER 
+            if (permission_add == true) {
+                $('#add').show();
+            }
 
             get_list_employee();
             reset_form();
@@ -51,6 +83,19 @@
 
                     if(response.data.length != 0) {
                         $.each(response.data, function(i, v) {
+                            // Permission 
+                            let btn_edit    = '-';
+                            let btn_delete  = '-';
+
+                            if (permission_edit == true) {
+                                btn_edit = '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark me-2" onclick="edit_employee('+v.id+')"><i data-feather="edit"></i></button> ';
+                            }
+
+                            if (permission_delete == true) {
+                                btn_delete =  '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark" onclick="delete_employee('+v.id+')"><i data-feather="trash-2"></i></button> ';
+                            }
+                            // Permission 
+
                             badgeStatus = v.active == 1 ? 'bg-green-soft text-green' : 'bg-red-soft text-red';
                             status = v.active == 1 ? 'Aktif' : 'Non-Aktif'
 
@@ -67,8 +112,8 @@
                                     '<td>'+v.address+'</td>'+
                                     '<td class="text-center"><span class="badge '+badgeStatus+'">'+status+'</span></td>'+
                                     '<td>'+
-                                        '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark me-2" onclick="edit_employee('+v.id+')"><i data-feather="edit"></i></button>'+    
-                                        '<button type="button" class="btn btn-datatable btn-icon btn-transparent-dark" onclick="delete_employee('+v.id+')"><i data-feather="trash-2"></i></button>'+
+                                        btn_edit+  
+                                        btn_delete+  
                                     '</td>'+
                                 '</tr>';
 
