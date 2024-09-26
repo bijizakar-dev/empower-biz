@@ -271,7 +271,7 @@
 
     </script>
 
-<main>
+    <main>
         <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
             <div class="container-fluid px-4">
                 <div class="page-header-content">

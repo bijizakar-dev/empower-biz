@@ -247,6 +247,39 @@ class System extends ResourceController
             return $this->respond(array('status' => false), 200);
         }
     }
+
+    public function getCheckPasswordUser(): ResponseInterface {
+        if(!$this->request->getVar('id')){
+            return $this->respond(NULL, 400);
+        }
+
+        $idUser         = $this->request->getVar('id');
+        $passwordOld    = $this->request->getVar('password');
+        
+        // Check password by id 
+        $checkPw = $this->m_user->check_change_password($idUser, $passwordOld);
+
+        if($checkPw){
+            return $this->respond(array('status' => $checkPw), 200); 
+        }else{
+            return $this->respond(array('status' => false), 200);
+        }
+    }
+
+    public function postChangePasswordUser(): ResponseInterface {
+        if(!$this->request->getPost('id')){
+            return $this->respond(NULL, 400);
+        }
+
+        $add = array (
+            'id' => $this->request->getPost('id'),
+            'password' => $this->request->getPost('conf_new_pw')
+        );
+
+        $data = $this->m_user->update_change_password($add);
+
+        return $this->respond($data, 200);
+    }
     
     /* USER */
 }

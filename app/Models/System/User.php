@@ -135,6 +135,38 @@ class User extends Model
         return $res;
     }
 
+    function check_change_password($id, $pw) {
+        $user = $this->find($id);
+        if ($user && password_verify($pw, $user->password)) {
+            return true;
+        }
+        return false;
+    }
+
+    function update_change_password(Array $data) {
+        $result = [
+            'success' => false,
+            'message' => '',
+            'id' => null,
+        ];
+
+        $data['password'] = $this->hashPassword($data['password']);
+
+        try {
+            $res = $this->update($data['id'], $data);
+            if (!$res) {
+                throw new Exception($this->error()['message']);
+            }
+            $result['id'] = $data['id'];
+            $result['message'] = "Berhasil mengubah password user";
+            
+            $result['success'] = true;
+        } catch (Exception $e) {
+            $result['message'] = $e->getMessage();
+        }
+    
+        return $result;
+    }
 
     // FUNCTION LOGIN LOGOUT
     function get_user_by_username_email($identity) {
